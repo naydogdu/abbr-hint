@@ -4,12 +4,9 @@ defined( 'ABSPATH' ) or die( 'Nope, not accessing this' );
 class ABBR_Hint {
 
 	public function __construct(){
-
-    add_action('init', array($this,'init')); //register location content type
-
-    register_activation_hook(__FILE__, array($this,'plugin_activate')); //activate hook
-    register_deactivation_hook(__FILE__, array($this,'plugin_deactivate')); //deactivate hook
-		
+    add_action('init', array($this,'init')); 
+    register_activation_hook(__FILE__, array($this,'plugin_activate')); 
+    register_deactivation_hook(__FILE__, array($this,'plugin_deactivate')); 
 	}
 	
 	public function init() {		
@@ -18,23 +15,18 @@ class ABBR_Hint {
 	}
 	
 	public function plugin_activate(){  
-
     $this->hint_init();
-    flush_rewrite_rules();
-		
+    //flush permalinks - pas besoin
+		//flush_rewrite_rules();
 	}
 	
-	//trigered on deactivation of the plugin (called only once)
 	public function plugin_deactivate(){
-		
-		//flush permalinks
-		flush_rewrite_rules();
-		
+		//flush permalinks - pas besoin
+		//flush_rewrite_rules();
 	}
 	
-	//register the hint content type
 	public function register_hint_content_type(){
-    //Labels for post type
+    /* on créé le post type */
     $labels = array(
 			'name'               => __('Hint', 'abbr_hint'),
 			'singular_name'      => __('Hint', 'abbr_hint'),
@@ -51,7 +43,7 @@ class ABBR_Hint {
 			'not_found'          => __('No Hints found.', 'abbr_hint'), 
 			'not_found_in_trash' => __('No Hints found in Trash.', 'abbr_hint'),
 		);
-		//arguments for post type
+		/* arguments */
 		$args = array(
 			'labels'            => $labels,
 			'public'            => false,
@@ -68,19 +60,89 @@ class ABBR_Hint {
 			'menu_icon'         => 'dashicons-editor-help',
 			'rewrite'            => false
 		);
-		//register post type
+		/* on enregistre */
 		register_post_type('hint', $args);
 	}
 
 	public function filter_content_for_hinting( $content ) {
 	
-		// WORK IN PROGRESS
+		global $wpdb;
+
+		/* on s'assure d'être sur une vue Singular */
+		if( !is_singular() )
+			return $content;
 		
-		// query hints
+		/* on stock le post type */
+    $post_type = 'hint'; 
 		
-		// search registered hints
+		/* on passe par get_results pour de meilleures performances, notamment s'il y a beaucoup de contenus. */
+    $hints = $wpdb->get_results( 
+			$wpdb->prepare( 
+				"SELECT ID, post_title FROM {$wpdb->posts} WHERE post_type = %s and post_status = 'publish'", 
+				$post_type 
+			)
+		);
+
+    /* On sort si aucun résultat */
+    if ( !$hints )
+			return $content;
 		
+		/* On déclare la variable $abbrs qui va servir à détecter les correspondances dans le contenu */
+		$abbrs = '';
+		
+		/* on alimente avec les abbréviations disponibles */
+		foreach( $hints as $hint ) 
+			$abbrs .= ( !empty( $abbrs ) ? '|' : '(' ) . esc_attr( $hint->post_title );
+		
+		/* on ferme la parenthèse si elle a été ouverte, c-à-d si non vide */
+		if( !empty( $abbrs ) )
+			$abbrs .= ')';
+		
+		/* on détecte si au moins un des mots se trouve dans le contenu */
+		$check = preg_match_all($abbrs, $content, $matches);
+		
+		/* on sort si aucune correspondance */
+		if( !$check || !isset( $matches[0] ) )
+			return $content;
+			
+		/* on commence notre boucle pour encapsuler un à un les mots par la balise <abbr> */
+		foreach( $matches[0] as $ms ) {
+			/* on récupère, maintenant qu'on en a besoin, le titre de l'abbréviation, stocké via la colonne "post_excerpt" */
+			$excerpt = $wpdb->get_col( 
+				$wpdb->prepare( 
+					"SELECT post_excerpt FROM {$wpdb->posts} WHERE post_title = %s and post_status = 'publish' LIMIT 1", 
+					esc_attr( $ms )
+				)
+			);
+			/* si on a bien un titre on encapsule via la fonction Html */
+			if( isset( $excerpt[0] ) && !empty( $excerpt[0] ) )
+				$content = preg_replace('/\b'.$ms.'\b/', $this->Html($ms, $excerpt[0]), $content, 1);
+			
+		}
+		
+		/* Pfiou !! On retourne le contenu "amélioré" avec une meilleure #a11y ! */
 		return $content;
+		
+	}
+	
+	public function Html($text='', $explanation='') {
+		
+		if( empty( $text ) )
+			return;
+		
+		$pattern = '';
+		
+		/*
+		* On ajoute la balise <abbr>, et l'attribut title si $explanation n'est pas vide 
+		* Support attribut "lang" à venir 
+		* à tester avec WPML
+		*/
+		$pattern .= '<abbr' . ( !empty( $explanation ) ? ' title="'. $explanation . '"' : '' ) . '>';		
+			$pattern .= $text;
+		$pattern .= '</abbr>';
+		
+		return $pattern;
+		
 	}
 	
 }
