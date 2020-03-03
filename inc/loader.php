@@ -4,9 +4,9 @@ defined( 'ABSPATH' ) or die( 'Nope, not accessing this' );
 class ABBR_Hint {
 
 	public function __construct(){
-    add_action('init', array($this,'init')); 
-    register_activation_hook(__FILE__, array($this,'plugin_activate')); 
-    register_deactivation_hook(__FILE__, array($this,'plugin_deactivate')); 
+		add_action('init', array($this,'init')); 
+		register_activation_hook(__FILE__, array($this,'plugin_activate')); 
+		register_deactivation_hook(__FILE__, array($this,'plugin_deactivate')); 
 	}
 	
 	public function init() {		
@@ -15,8 +15,8 @@ class ABBR_Hint {
 	}
 	
 	public function plugin_activate(){  
-    $this->hint_init();
-    //flush permalinks - pas besoin
+		$this->hint_init();
+		//flush permalinks - pas besoin
 		//flush_rewrite_rules();
 	}
 	
@@ -26,8 +26,8 @@ class ABBR_Hint {
 	}
 	
 	public function register_hint_content_type(){
-    /* on créé le post type */
-    $labels = array(
+		/* on créé le post type */
+		$labels = array(
 			'name'               => __('Hint', 'abbr_hint'),
 			'singular_name'      => __('Hint', 'abbr_hint'),
 			'menu_name'          => __('Hints', 'abbr_hint'),
@@ -73,17 +73,17 @@ class ABBR_Hint {
 			return $content;
 		
 		/* on stock le post type */
-    $post_type = 'hint'; 
+		$post_type = 'hint'; 
 		
 		/* on passe par get_results pour de meilleures performances, notamment s'il y a beaucoup de contenus. */
-    $hints = $wpdb->get_results( 
+		$hints = $wpdb->get_results( 
 			$wpdb->prepare( 
 				"SELECT ID, post_title FROM {$wpdb->posts} WHERE post_type = %s and post_status = 'publish'", 
 				$post_type 
 			)
 		);
 
-    /* On sort si aucun résultat */
+		/* On sort si aucun résultat */
     if ( !$hints )
 			return $content;
 		
@@ -103,7 +103,7 @@ class ABBR_Hint {
 		
 		/* on sort si aucune correspondance */
 		if( !$check || !isset( $matches[0] ) )
-			return $content;
+		return $content;
 			
 		/* on commence notre boucle pour encapsuler un à un les mots par la balise <abbr> */
 		foreach( $matches[0] as $ms ) {
