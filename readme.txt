@@ -1,4 +1,14 @@
-# abbr-hint
+=== ABBR Hint Content ===
+Contributors: anthem0n
+Donate link: https://nazmi.grapheek.com/
+Tags: abbr, opquast, a11y, accessibility, acronyms, lightweight, hint, rcag
+Requires at least: 4.0
+Tested up to: 5.3
+Stable tag: trunk
+Requires PHP: 5.2.4
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
 Automatically add hints/explanations for abbreviations or acronyms to all of your content.
 
 == Description ==
@@ -35,13 +45,8 @@ Optional **lang** attribute support for generated abbr tag and french translatio
 
 == Screenshots ==
 
-![Before installing and activating plugin](https://nazmi.grapheek.com/files/abbr-svn/screenshot-1.jpg "Before installing and activating plugin")
 1. Before installing and activating plugin
-
-![Admin area](https://nazmi.grapheek.com/files/abbr-svn/screenshot-2.jpg "Admin area, easily add your explanation of abbreviations")
 2. Admin area, easily add your explanation of abbreviations
-
-![Result](https://nazmi.grapheek.com/files/abbr-svn/screenshot-3.jpg "Result")
 3. When an abbreviation is found, it is displayed with abbr tag. Only first element is tagged, not all, like on this example (second "CSS" string is ignored).
 
 == Changelog ==
