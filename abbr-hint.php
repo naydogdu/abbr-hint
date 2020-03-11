@@ -3,7 +3,7 @@
 Plugin Name: ABBR Hint Content
 Plugin URI:  https://github.com/naydogdu/abbr-hint.git
 Description: Lightweight content optimizer. Automatically add hints/explanations for abbreviations or acronyms to all of your content.
-Version:     0.7.7
+Version:     0.7.8
 Author:      Nazmi Aydogdu
 Author URI:  https://nazmi.grapheek.com/
 License:     GPL2

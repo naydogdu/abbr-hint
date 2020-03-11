@@ -13,9 +13,11 @@ Automatically add hints/explanations for abbreviations or acronyms to all of you
 
 == Description ==
 
-Lightweight content optimizer, be #a11y !
+Lightweight content optimizer, be **#a11y** !
 
-Automatically add hints/explanations for abbreviations or acronyms to all of your content. You can use this plugin if you want to improve the accessibility of your content, especially if you often use acronyms or abbreviations. 
+Automatically add hints/explanations for abbreviations or acronyms to all of your content. 
+
+You can use this plugin if you want to improve the accessibility of your content, especially if you often use acronyms or abbreviations. 
 
 Note :
 * For a given word, <abbr> tag will only be added at first occurrence.
@@ -50,6 +52,9 @@ Optional **lang** attribute support for generated abbr tag and french translatio
 3. When an abbreviation is found, it is displayed with abbr tag. Only first element is tagged, not all, like on this example (second "CSS" string is ignored).
 
 == Changelog ==
+
+= 0.7.8 =
+* Fix WP "not tested" notice on plugin page
 
 = 0.7.7 =
 * Better readme.txt and WP Plugins description
